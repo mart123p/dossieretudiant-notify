@@ -11,15 +11,28 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 
+from PyPDF2 import PdfFileReader
+import re
+import io
 
 import azure.functions as func
 from azure.storage.blob import BlobClient
 
+regex = re.compile("[\s\n\r:,]")
+
+
 def __computeHash(fileBlob):
-    # Compute sha256 for pdf file for the correct part
-    content_pos = 0x138
+    # Compute sha256 for pdf based on the text
+    binary_stream = io.BytesIO()
+    binary_stream.write(fileBlob)
+
+    text = ""
+    pdfReader = PdfFileReader(binary_stream)
+    for i in range(pdfReader.getNumPages()):
+        text += pdfReader.getPage(i).extractText()
     hasher = hashlib.sha256()
-    hasher.update(fileBlob[content_pos:])
+    hasher.update(regex.sub("",text).lower().encode("utf-8"))
+    
     return hasher.hexdigest()
 
 def __send_email(file_content):
