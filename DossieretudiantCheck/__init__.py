@@ -119,7 +119,7 @@ def main(mytimer: func.TimerRequest) -> None:
         if newFile: 
             logging.info("New changes detected!")
 
-            blob.upload_blob(report)
+            blob.upload_blob(report,overwrite=True)
             logging.info("File exported to blob.")
             __send_email(report)
             logging.info("Email sent.")
