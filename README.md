@@ -1,4 +1,4 @@
-# Dossier Étudiant Notifier
+# Dossier Étudiant Notify
 Periodically check the Polytechnique Montreal DossierEtudiant to alert me of any new grades or any modifications to my report card.
 
 ## Installation and usage
